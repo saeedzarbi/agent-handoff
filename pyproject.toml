@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agent-handoff"
+version = "0.1.0"
+description = "Convert coding-agent session logs into task specs for another agent"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+keywords = ["ai-agents", "coding-agent", "opencode", "codex", "cli"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+  "pydantic>=2.10",
+  "typer>=0.15",
+  "rich>=13.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "ruff>=0.8"]
+
+[project.scripts]
+agent-handoff = "agent_handoff.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agent_handoff"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
