@@ -41,7 +41,12 @@ agent-handoff convert --from codex --to opencode \
 ```bash
 agent-handoff convert --from auto --to codex -i session.json
 agent-handoff detect -i session.json
+agent-handoff detect -i session.json --json
 ```
+
+Detection inspects structure before parsing (OpenCode `info`/`messages`/`parts`, Codex
+`session_meta`/`response_item` JSONL, markdown handoffs, or simple chat JSON). Unknown
+files fail with a clear error instead of producing broken output.
 
 **Cline / OpenHands / Goose (markdown or simple chat JSON)**
 

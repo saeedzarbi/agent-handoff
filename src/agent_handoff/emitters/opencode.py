@@ -4,7 +4,7 @@ import json
 import time
 
 from agent_handoff.emitters.shared import _task_body
-from agent_handoff.models import HandoffSpec
+from agent_handoff.models import SCHEMA_VERSION, HandoffSpec
 
 
 def emit_opencode(spec: HandoffSpec) -> str:
@@ -30,7 +30,9 @@ def emit_opencode(spec: HandoffSpec) -> str:
         ],
         "handoff_meta": {
             "format": "agent-handoff-opencode-v1",
+            "schema_version": SCHEMA_VERSION,
             "source_agent": spec.source_agent,
+            "handoff_spec": spec.model_dump(mode="json"),
         },
     }
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"

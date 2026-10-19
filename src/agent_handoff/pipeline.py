@@ -2,22 +2,21 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from agent_handoff.detection import (
+    FormatDetection,
+    SessionFormatError,
+    detect_session_format,
+    detection_to_legacy_id,
+    resolve_parser_agent,
+)
 from agent_handoff.emitters import EMITTERS
 from agent_handoff.models import HandoffSpec
 from agent_handoff.parsers import PARSERS
-from agent_handoff.parsers.codex import is_codex_rollout
-from agent_handoff.parsers.opencode import is_opencode_export
 
 
 def detect_format(path: Path, raw: str) -> str | None:
-    if is_opencode_export(path, raw):
-        return "opencode"
-    if is_codex_rollout(path, raw):
-        return "codex"
-    stripped = raw.lstrip()
-    if stripped.startswith("#") or "handoff" in path.name.lower():
-        return "generic"
-    return None
+    """Legacy helper: returns opencode | codex | generic | None."""
+    return detection_to_legacy_id(detect_session_format(path, raw))
 
 
 def parse_source(source: str, raw: str, path: Path | None = None) -> HandoffSpec:
@@ -37,6 +36,19 @@ def emit_target(target: str, spec: HandoffSpec) -> str:
     return emitter(spec)
 
 
+def load_spec(
+    source: str,
+    input_path: Path,
+    *,
+    auto_detect: bool = True,
+) -> HandoffSpec:
+    raw = input_path.read_text(encoding="utf-8")
+    parser_agent, _det = resolve_parser_agent(
+        input_path, raw, source, auto_detect=auto_detect
+    )
+    return parse_source(parser_agent, raw, input_path)
+
+
 def convert_file(
     source: str,
     target: str,
@@ -45,12 +57,19 @@ def convert_file(
     auto_detect: bool = True,
 ) -> str:
     raw = input_path.read_text(encoding="utf-8")
-    if source == "auto":
-        if not auto_detect:
-            raise ValueError("Pass --from or enable auto detection.")
-        detected = detect_format(input_path, raw)
-        if not detected:
-            raise ValueError("Could not detect source format; pass --from explicitly.")
-        source = "cline" if detected == "generic" else detected
-    spec = parse_source(source, raw, input_path)
+    parser_agent, _det = resolve_parser_agent(
+        input_path, raw, source, auto_detect=auto_detect
+    )
+    spec = parse_source(parser_agent, raw, input_path)
     return emit_target(target, spec)
+
+
+__all__ = [
+    "FormatDetection",
+    "SessionFormatError",
+    "convert_file",
+    "detect_format",
+    "detect_session_format",
+    "load_spec",
+    "parse_source",
+]

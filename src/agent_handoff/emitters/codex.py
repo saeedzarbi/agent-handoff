@@ -16,6 +16,7 @@ def emit_codex(spec: HandoffSpec) -> str:
         "title": spec.title,
         "user_message": spec.objective,
         "full_prompt_markdown": prompt,
+        "handoff_spec": spec.model_dump(mode="json"),
         "suggested_rollout_seed": {
             "type": "response_item",
             "payload": {
