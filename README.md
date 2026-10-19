@@ -2,6 +2,8 @@
 
 Lightweight CLI to turn one **coding agent's session log** into a **task spec** another agent can run. Read → clean/normalize → emit.
 
+**Live demo (format detection in the browser):** [saeedzarbi.github.io/agent-handoff](https://saeedzarbi.github.io/agent-handoff/)
+
 Supported agents (identifiers):
 
 | ID | Role today |
