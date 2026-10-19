@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="agent-handoff converts coding-agent session logs into task specs for another agent. Try format detection in the browser."
+    />
+    <title>agent-handoff — session format detection &amp; conversion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="logo">agent<span>-handoff</span></div>
+        <nav>
+          <a href="#install">Install</a>
+          <a href="#cli">CLI</a>
+          <a href="#demo">Live demo</a>
+          <a href="https://github.com/saeedzarbi/agent-handoff">GitHub</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <h1>Hand off coding-agent sessions without losing context</h1>
+        <p class="lead">
+          <strong>agent-handoff</strong> reads session exports from tools like OpenCode and Codex,
+          normalizes them into a shared handoff spec, and emits a continuation package for your
+          next agent. Detect the format first, then convert — or try detection right here in your
+          browser.
+        </p>
+        <div class="pill-row">
+          <span class="pill">OpenCode JSON</span>
+          <span class="pill">Codex JSONL</span>
+          <span class="pill">Markdown handoffs</span>
+          <span class="pill">Chat JSON</span>
+          <span class="pill">CLI + browser demo</span>
+        </div>
+      </section>
+
+      <section id="install">
+        <h2>Install</h2>
+        <div class="install-block">
+          <code id="pip-cmd">pip install agent-handoff</code>
+          <button type="button" class="copy" data-copy="pip install agent-handoff">Copy</button>
+        </div>
+        <p class="muted" style="margin-top: 0.75rem">
+          For development:
+          <code>pip install -e ".[dev]"</code> from the
+          <a href="https://github.com/saeedzarbi/agent-handoff">repository</a>.
+        </p>
+      </section>
+
+      <section id="cli">
+        <h2>CLI examples</h2>
+        <p class="muted">Detection runs automatically with <code>--from auto</code> (default for inspect).</p>
+        <div class="terminal" aria-label="CLI example: detect">
+          <div><span class="prompt">$</span> agent-handoff detect -i session.json</div>
+          <div class="out">format: opencode_export</div>
+          <div class="out">parser: opencode</div>
+          <div class="out">version: export-v1-tools</div>
+          <div class="out">signature: info+messages+parts</div>
+          <div class="out">confidence: 0.95</div>
+        </div>
+        <div class="terminal" aria-label="CLI example: convert">
+          <div><span class="prompt">$</span> agent-handoff convert -f auto -t codex -i rollout.jsonl -o task.json</div>
+          <div class="out">Wrote task.json</div>
+        </div>
+        <div class="terminal" aria-label="CLI example: unknown format">
+          <div><span class="prompt">$</span> agent-handoff detect -i mystery.json</div>
+          <div class="out">format: unknown</div>
+          <div class="out">message: This format is not recognized.</div>
+        </div>
+      </section>
+
+      <section id="demo">
+        <h2>Live demo — format detection</h2>
+        <p class="muted">
+          All logic runs in your browser (no upload to a server). Pick a sample fixture, paste
+          text, or choose a local file. Results mirror the Python
+          <code>detect_session_format</code> heuristics.
+        </p>
+        <div class="demo-card">
+          <div class="demo-toolbar">
+            <label for="sample-select">Sample fixture</label>
+            <select id="sample-select" aria-label="Sample fixture"></select>
+            <button type="button" class="secondary" id="load-sample">Load sample</button>
+          </div>
+          <div class="demo-toolbar">
+            <label for="file-input">Or upload</label>
+            <input type="file" id="file-input" accept=".json,.jsonl,.md,.txt" />
+          </div>
+          <textarea
+            id="paste-area"
+            placeholder="Paste session export JSON, JSONL, markdown, or chat JSON here…"
+            spellcheck="false"
+          ></textarea>
+          <div class="btn-row">
+            <button type="button" class="primary" id="detect-btn">Detect format</button>
+            <button type="button" class="secondary" id="clear-btn">Clear</button>
+          </div>
+          <div class="demo-grid">
+            <div>
+              <p class="muted" style="margin-top: 0">Result</p>
+              <div id="result-panel">
+                <p class="muted">Run detection to see format, parser, and signature.</p>
+              </div>
+            </div>
+            <div>
+              <p class="muted" style="margin-top: 0">JSON</p>
+              <pre class="json-out" id="result-json" aria-label="Detection JSON"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        MIT License ·
+        <a href="https://github.com/saeedzarbi/agent-handoff">saeedzarbi/agent-handoff</a>
+      </footer>
+    </div>
+    <script>
+      document.querySelectorAll("[data-copy]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const text = btn.getAttribute("data-copy");
+          navigator.clipboard.writeText(text).then(() => {
+            btn.textContent = "Copied!";
+            setTimeout(() => {
+              btn.textContent = "Copy";
+            }, 1500);
+          });
+        });
+      });
+    </script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

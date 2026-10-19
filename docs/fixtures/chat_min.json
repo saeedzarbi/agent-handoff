@@ -1,0 +1,6 @@
+{
+  "messages": [
+    { "role": "user", "content": "Refactor the cache module." },
+    { "role": "assistant", "content": "Done; tests pass." }
+  ]
+}
