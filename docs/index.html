@@ -21,6 +21,7 @@
       <header>
         <div class="logo">agent<span>-handoff</span></div>
         <nav>
+          <a href="#why">Why</a>
           <a href="#install">Install</a>
           <a href="#cli">CLI</a>
           <a href="#demo">Live demo</a>
@@ -43,6 +44,70 @@
           <span class="pill">Chat JSON</span>
           <span class="pill">CLI + browser demo</span>
         </div>
+      </section>
+
+      <section id="why" class="before-after" aria-labelledby="why-heading">
+        <h2 id="why-heading">Why agent-handoff?</h2>
+        <ol class="narrative-steps">
+          <li>Session finished?</li>
+          <li>Where do you want to continue?</li>
+          <li><strong>agent-handoff</strong> picks it up.</li>
+        </ol>
+        <div class="compare-grid">
+          <div class="frame frame--before">
+            <div class="frame-bar">
+              <span class="frame-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="frame-title">session-export.json — raw OpenCode export</span>
+            </div>
+            <pre class="frame-body frame-body--messy" aria-label="Before: messy session log"><code>{
+  "info": {"id": "ses_a8f2…", "title": "Fix login redirect", "createdAt": 1792435324365},
+  "messages": [
+    {"info": {"role": "user", "id": "msg_01"}, "parts": [
+      {"type": "text", "text": "Add JSON 401 for AJAX login when session expires…"}
+    ]},
+    {"info": {"role": "assistant"}, "parts": [
+      {"type": "tool", "tool": "edit", "state": {"status": "completed",
+        "input": {"filePath": "app/views.py", "oldString": "…", "newString": "…"},
+        "output": "Updated decorator login_required_json."}},
+      {"type": "text", "text": "I updated the decorator; running pytest…"},
+      {"type": "tool", "tool": "bash", "state": {"status": "completed",
+        "input": {"command": "pytest tests/test_auth.py -q"}, "output": "…12 lines…"}}
+    ]},
+    …4 more turns, token usage, part IDs, nested state…
+  ]
+}</code></pre>
+          </div>
+          <div class="compare-arrow" aria-hidden="true">→</div>
+          <div class="frame frame--after">
+            <div class="frame-bar">
+              <span class="frame-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="frame-title">codex-task.json — handoff for Codex</span>
+            </div>
+            <pre class="frame-body frame-body--clean" aria-label="After: clean Codex handoff"><code><span class="tok-key">"user_message"</span>:
+  Continue: add integration test for the login JSON endpoint.
+
+<span class="tok-key">## Objective</span>
+Hand off: add integration test for the API route.
+
+<span class="tok-key">## Context</span>
+Add JSON 401 for AJAX login when session expires.
+
+<span class="tok-key">## Prior work</span>
+Updated <span class="tok-path">app/views.py</span> (login_required_json).
+pytest tests/test_auth.py — passing locally.
+
+<span class="tok-key">## File changes</span>
+• app/views.py (modified)
+
+<span class="tok-key">## Constraints</span>
+• Continue from summarized state; don't redo completed work.
+• Prefer editing listed files before creating new ones.</code></pre>
+          </div>
+        </div>
+        <p class="muted compare-caption">
+          One command:
+          <code>agent-handoff convert -f auto -t codex -i session-export.json -o codex-task.json</code>
+        </p>
       </section>
 
       <section id="install">
