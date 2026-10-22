@@ -4,6 +4,8 @@ Lightweight CLI to turn one **coding agent's session log** into a **task spec** 
 
 **Live demo (format detection in the browser):** [saeedzarbi.github.io/agent-handoff](https://saeedzarbi.github.io/agent-handoff/)
 
+📖 **Story behind it:** [Moving a Coding Agent's Work to Another Agent Without Starting Over](https://medium.com/@saeedzarbi95/moving-a-coding-agents-work-to-another-agent-without-starting-over-41167272f52d) on Medium
+
 Supported agents (identifiers):
 
 | ID | Role today |
